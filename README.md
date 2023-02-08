@@ -60,6 +60,10 @@ In order to log user in you need to try getting them by username (like `http://l
 
 In order to sign user up just `POST` the form contents to `http://localhost:3000/users`, 200 response means signup was succesfull and user is authenticated now.
 
+#### Storing logged in user
+
+You can store logged in user data in `localStorage` for simplicity.
+
 ## Help
 
 In case you get stuck or have questions/suggestions for this repo feel free to create GitHub issue or reach people from "Professors" field in [GridU React course](https://gridu.litmos.com/home/LearningPath/26572?r=False&ts=637785982384795974).
