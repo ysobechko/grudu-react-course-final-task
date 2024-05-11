@@ -38,7 +38,8 @@ const LoginPage = () => {
           const user = data[0];
 
           if (user.password === formData.password) {
-            logIn(user);
+            const { password, ...rest } = user;
+            logIn(rest);
             navigate("/");
             return;
           }

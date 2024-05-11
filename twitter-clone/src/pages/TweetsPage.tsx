@@ -23,7 +23,7 @@ const TweetsPage = () => {
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const fetchData = async () => {
     try {
-      const response = await fetch(`${API_URL}/tweets`);
+      const response = await fetch(`${API_URL}/tweets?_sort=date&_order=desc`);
       const data = await response.json();
       setTweets(data);
     } catch (error) {
@@ -36,7 +36,6 @@ const TweetsPage = () => {
   }, []);
 
   const onSubmit = async (data: FormData) => {
-    console.log(data);
     try {
       const response = await fetch(`${API_URL}/tweets`, {
         method: "POST",
@@ -46,6 +45,7 @@ const TweetsPage = () => {
         body: JSON.stringify({
           author_id: user!.id,
           text: data.tweet,
+          date: new Date().toISOString(),
         }),
       });
 

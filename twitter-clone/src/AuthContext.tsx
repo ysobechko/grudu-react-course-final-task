@@ -9,14 +9,12 @@ export interface User {
 
 interface AuthContextType {
   user: User | null;
-  isLoggedIn: boolean;
   logIn: (userData: User) => void;
   logOut: () => void;
 }
 
 const defaultAuthContext = {
   user: null,
-  isLoggedIn: false,
   logIn: () => {},
   logOut: () => {},
 };
@@ -37,6 +35,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   if (userData && !user) {
     setUser(JSON.parse(userData));
   }
+
   const logIn = (userData: User) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
@@ -45,8 +44,9 @@ export const AuthProvider: React.FC = ({ children }) => {
     localStorage.removeItem('user');
     setUser(null);
   };
+
   return (
-    <AuthContext.Provider value={{ user, isLoggedIn: user !== null, logIn, logOut }}> {/* add isLoggedIn here */}
+    <AuthContext.Provider value={{ user, logIn, logOut }}>
       {children}
     </AuthContext.Provider>
   );
