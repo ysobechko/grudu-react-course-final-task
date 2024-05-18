@@ -43,7 +43,7 @@ There's `db.json` file in repo root. Feed it into [JSON Server](https://github.c
 The command to do it (port is specified to avoid conflict with React app):
 
 ```shell
-json-server --watch db.json --port 3001
+json-server --watch db.json --port 3001 --routes routes.json
 ```
 
 ### Authentication
