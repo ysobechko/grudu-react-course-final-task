@@ -1,19 +1,19 @@
 import { useContext, useState, BaseSyntheticEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import AuthForm from "../components/AuthForm";
-import { API_URL } from "../constants";
+import { createUser } from "../api";
 
-interface FormData {
+type FormData = {
   email: string;
   password: string;
   username: string;
   fullName: string;
-}
+};
 
 const SignupPage = () => {
-  const { logIn } = useContext(AuthContext);
+  const { authenticate } = useContext(AuthContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
@@ -23,7 +23,7 @@ const SignupPage = () => {
   } = useForm<FormData>();
 
   const handleSignup = async (
-    { username, fullName, email, password }: FormData,
+    formData: FormData,
     event: BaseSyntheticEvent | undefined
   ) => {
     event?.preventDefault();
@@ -31,22 +31,15 @@ const SignupPage = () => {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(`${API_URL}/users`, {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({ id: username, name: fullName, email, password }),
+      const newUser = await createUser({
+        id: formData.username,
+        name: formData.fullName,
+        email: formData.email,
+        password: formData.password,
       });
 
-      if (response.status === 201) {
-        const data = await response.json();
-
-        logIn(data);
-        navigate("/");
-      } else {
-        throw new Error();
-      }
+      authenticate(newUser);
+      navigate("/");
     } catch (error) {
       setErrorMessage("Something went wrong");
     }

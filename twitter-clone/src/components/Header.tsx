@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import { AuthContext } from "../AuthContext";
+import { AuthContext } from "./AuthContext";
 import Logo from "../logo.svg";
 
 const Header: React.FC = () => {

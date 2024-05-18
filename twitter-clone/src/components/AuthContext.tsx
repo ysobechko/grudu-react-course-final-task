@@ -1,33 +1,28 @@
 import React, { createContext, useState, useContext } from 'react';
+import { User } from '../types';
 
-export interface User {
-  username: string;
-  id: string;
-  name: string;
-  email: string;
-}
-
-interface AuthContextType {
+type AuthContextType = {
   user: User | null;
-  logIn: (userData: User) => void;
+  authenticate: (userData: User) => void;
   logOut: () => void;
 }
 
 const defaultAuthContext = {
   user: null,
-  logIn: () => {},
+  authenticate: () => {},
   logOut: () => {},
 };
 
-export const useAuth = (): AuthContextType => {
+export const useAuthContext = (): AuthContextType => {
   const context = useContext(AuthContext);
   if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
+    throw new Error('useAuthContext must be used within an AuthProvider');
   }
   return context;
 };
 
 export const AuthContext = createContext<AuthContextType>(defaultAuthContext);
+
 export const AuthProvider: React.FC = ({ children }) => {
   const userData = localStorage.getItem('user');
   const [user, setUser] = useState<User | null>(null);
@@ -36,7 +31,7 @@ export const AuthProvider: React.FC = ({ children }) => {
     setUser(JSON.parse(userData));
   }
 
-  const logIn = (userData: User) => {
+  const authenticate = (userData: User) => {
     localStorage.setItem('user', JSON.stringify(userData));
     setUser(userData);
   };
@@ -46,7 +41,7 @@ export const AuthProvider: React.FC = ({ children }) => {
   };
 
   return (
-    <AuthContext.Provider value={{ user, logIn, logOut }}>
+    <AuthContext.Provider value={{ user, authenticate, logOut }}>
       {children}
     </AuthContext.Provider>
   );

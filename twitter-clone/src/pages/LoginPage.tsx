@@ -1,17 +1,17 @@
 import { useContext, useState, BaseSyntheticEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
-import { AuthContext } from "../AuthContext";
+import { AuthContext } from "../components/AuthContext";
 import AuthForm from "../components/AuthForm";
-import { API_URL } from "../constants";
+import { getUserByEmail } from "../api";
 
-interface FormData {
+type FormData = {
   email: string;
   password: string;
 }
 
 const LoginPage = () => {
-  const { logIn } = useContext(AuthContext);
+  const { authenticate } = useContext(AuthContext);
   const navigate = useNavigate();
   const [errorMessage, setErrorMessage] = useState<string | null>(null);
   const {
@@ -29,24 +29,17 @@ const LoginPage = () => {
     setErrorMessage(null);
 
     try {
-      const response = await fetch(`${API_URL}/users/${formData.email}`);
+      const user = await getUserByEmail(formData.email);
 
-      if (response.status === 200) {
-        const data = await response.json();
-
-        if (data.length !== 0) {
-          const user = data[0];
-
-          if (user.password === formData.password) {
-            const { password, ...rest } = user;
-            logIn(rest);
-            navigate("/");
-            return;
-          }
-        }
+      if (user && user.password === formData.password) {
+        const { password, ...rest } = user;
+    
+        authenticate(rest);
+        navigate("/");
+        return;
+      }
 
         setErrorMessage("Invalid email or password");
-      }
     } catch (error) {
       setErrorMessage("Something went wrong");
     }
